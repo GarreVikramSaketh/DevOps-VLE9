@@ -1,0 +1,35 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: |
+          cd backend
+          npm install
+
+      - name: Run Security Audit
+        run: |
+          cd backend
+          npm audit --audit-level=high
+
+      - name: Run App (Test)
+        run: |
+          cd backend
+          node server.js &
+          sleep 5
+          curl http://localhost:8000
