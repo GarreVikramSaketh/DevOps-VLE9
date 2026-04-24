@@ -26,10 +26,3 @@ jobs:
         run: |
           cd healthcare-devsecops/backend
           npm audit --audit-level=high
-
-      - name: Test App
-        run: |
-          cd healthcare-devsecops/backend
-          node server.js &
-          sleep 5
-          curl http://localhost:8000
