@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Healthcare DevSecOps</title>
+</head>
+<body>
+
+  <h2>Healthcare DevSecOps Demo</h2>
+
+  <h3>Register</h3>
+  <input id="regEmail" placeholder="Email"><br><br>
+  <input id="regPass" placeholder="Password" type="password"><br><br>
+  <button onclick="register()">Register</button>
+
+  <h3>Login</h3>
+  <input id="logEmail" placeholder="Email"><br><br>
+  <input id="logPass" placeholder="Password" type="password"><br><br>
+  <button onclick="login()">Login</button>
+
+  <h3>Output</h3>
+  <pre id="output"></pre>
+
+<script>
+const BASE_URL = "http://localhost:8000";
+
+async function register() {
+  const email = document.getElementById("regEmail").value;
+  const password = document.getElementById("regPass").value;
+
+  const res = await fetch(BASE_URL + "/api/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+  document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+}
+
+async function login() {
+  const email = document.getElementById("logEmail").value;
+  const password = document.getElementById("logPass").value;
+
+  const res = await fetch(BASE_URL + "/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+  document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>

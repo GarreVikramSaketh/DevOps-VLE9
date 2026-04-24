@@ -3,21 +3,28 @@ const express = require("express");
 const fs = require("fs");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 8000;
 
+// Serve UI (index.html automatically)
+app.use(express.static(__dirname));
+
 // Read users
 const getUsers = () => {
-  const data = fs.readFileSync("users.json");
+  const data = fs.readFileSync(path.join(__dirname, "users.json"));
   return JSON.parse(data);
 };
 
 // Save users
 const saveUsers = (users) => {
-  fs.writeFileSync("users.json", JSON.stringify(users, null, 2));
+  fs.writeFileSync(
+    path.join(__dirname, "users.json"),
+    JSON.stringify(users, null, 2)
+  );
 };
 
 // REGISTER
@@ -60,11 +67,6 @@ app.post("/api/auth/login", async (req, res) => {
   });
 
   res.json({ token });
-});
-
-// HOME
-app.get("/", (req, res) => {
-  res.send("Healthcare DevSecOps API Running (No DB)");
 });
 
 app.listen(PORT, () => {
