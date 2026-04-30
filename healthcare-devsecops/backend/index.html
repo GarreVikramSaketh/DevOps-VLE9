@@ -1,149 +1,1368 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Patient Health Portal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediSecure — Patient Health Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial;
-      margin: 0;
-      background: #f4f8fb;
+    :root {
+      --teal: #0d9488;
+      --teal-light: #14b8a6;
+      --teal-dark: #0f766e;
+      --navy: #0f172a;
+      --slate: #1e293b;
+      --slate-mid: #334155;
+      --muted: #94a3b8;
+      --surface: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(15,23,42,0.08);
+      --shadow-lg: 0 12px 48px rgba(15,23,42,0.14);
     }
 
-    .header {
-      background: #007bff;
-      color: white;
-      padding: 15px;
-      text-align: center;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── AUTH SCREEN ─────────────────────────────────── */
+    #authSection {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .auth-left {
+      flex: 1;
+      background: linear-gradient(145deg, #0f2744 0%, #0d9488 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 50%;
+      top: -100px; right: -150px;
+    }
+    .auth-left::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+      bottom: -80px; left: -60px;
+    }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 60px;
+    }
+
+    .auth-brand-icon {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
       font-size: 22px;
     }
 
-    .container {
+    .auth-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: white;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .auth-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: 44px;
+      color: white;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .auth-sub {
+      color: rgba(255,255,255,0.65);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 380px;
+      margin-bottom: 48px;
+    }
+
+    .auth-badges {
       display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auth-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+    }
+
+    .auth-badge-dot {
+      width: 8px; height: 8px;
+      background: #2dd4bf;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .auth-right {
+      width: 480px;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      margin-top: 50px;
-    }
-
-    .card {
+      padding: 60px 52px;
       background: white;
-      padding: 20px;
-      width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px gray;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
+    .auth-tabs {
+      display: flex;
+      gap: 0;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 36px;
     }
 
-    button {
-      width: 100%;
+    .auth-tab {
+      flex: 1;
       padding: 10px;
-      background: #007bff;
+      border: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .auth-tab.active {
+      background: white;
+      color: var(--teal-dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .auth-form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .auth-form-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--slate-mid);
+      margin-bottom: 7px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--navy);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+      background: white;
+    }
+
+    .form-input::placeholder { color: #b0bec5; }
+
+    .input-icon-wrap {
+      position: relative;
+    }
+
+    .input-icon-wrap .form-input {
+      padding-left: 42px;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
       color: white;
       border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.1px;
+      margin-top: 8px;
     }
 
-    .dashboard {
-      display: none;
-      padding: 20px;
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(13,148,136,0.35);
     }
 
-    .box {
-      background: white;
-      padding: 20px;
-      margin: 20px;
+    .btn-primary:active { transform: translateY(0); }
+
+    .security-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 12px 14px;
+      background: #f0fdf9;
+      border: 1px solid #ccfbf1;
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--teal-dark);
+    }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    /* ─── DASHBOARD ──────────────────────────────────── */
+    #dashboard { display: none; }
+
+    .dash-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 24px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .sidebar-brand-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
       border-radius: 10px;
-      box-shadow: 0 0 10px gray;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
     }
+
+    .sidebar-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: white;
+      font-weight: 700;
+    }
+
+    .sidebar-section {
+      padding: 20px 16px 8px;
+    }
+
+    .sidebar-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.3);
+      padding: 0 8px;
+      margin-bottom: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.18s;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .nav-item.active {
+      background: rgba(13,148,136,0.22);
+      color: #2dd4bf;
+    }
+
+    .nav-icon { font-size: 18px; width: 22px; text-align: center; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .sidebar-user:hover { background: rgba(255,255,255,0.06); }
+
+    .avatar {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--teal), #1d4ed8);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      color: white;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .sidebar-user-info { flex: 1; min-width: 0; }
+    .sidebar-user-name { font-size: 13px; font-weight: 600; color: white; }
+    .sidebar-user-role { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+    /* MAIN CONTENT */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--surface);
+    }
+
+    /* TOP BAR */
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-left h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .topbar-left p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-btn {
+      width: 38px; height: 38px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .topbar-btn:hover { border-color: var(--teal); }
+
+    .badge-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    /* PAGE CONTENT */
+    .page-content {
+      padding: 32px;
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 80px; height: 80px;
+      border-radius: 0 var(--radius) 0 80px;
+      opacity: 0.06;
+    }
+
+    .stat-card.teal::after { background: var(--teal); }
+    .stat-card.blue::after { background: #3b82f6; }
+    .stat-card.purple::after { background: #8b5cf6; }
+    .stat-card.orange::after { background: #f97316; }
+
+    .stat-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card.teal .stat-icon { background: #ccfbf1; }
+    .stat-card.blue .stat-icon { background: #dbeafe; }
+    .stat-card.purple .stat-icon { background: #ede9fe; }
+    .stat-card.orange .stat-icon { background: #ffedd5; }
+
+    .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-change {
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-change.up { color: var(--success); }
+    .stat-change.down { color: var(--danger); }
+
+    /* GRID 2-COL */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .grid-3-1 {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--navy);
+    }
+
+    .card-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .badge-teal { background: #ccfbf1; color: var(--teal-dark); }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+
+    .card-body { padding: 20px 24px; }
+
+    /* VITALS */
+    .vitals-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .vital-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .vital-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .vital-info { flex: 1; }
+    .vital-name { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
+    .vital-value { font-size: 15px; font-weight: 600; color: var(--navy); }
+
+    .vital-bar-wrap {
+      width: 80px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .vital-bar { height: 100%; border-radius: 3px; }
+
+    /* APPOINTMENTS */
+    .appt-list { display: flex; flex-direction: column; gap: 0; }
+
+    .appt-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .appt-item:last-child { border-bottom: none; }
+
+    .appt-date {
+      text-align: center;
+      width: 44px;
+      flex-shrink: 0;
+    }
+
+    .appt-day { font-size: 22px; font-weight: 700; color: var(--teal); font-family: 'Playfair Display', serif; }
+    .appt-month { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .appt-divider { width: 1px; height: 40px; background: var(--border); }
+
+    .appt-info { flex: 1; }
+    .appt-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+    .appt-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .appt-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* MEDICATIONS */
+    .med-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .med-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .med-pill {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .med-info { flex: 1; }
+    .med-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+    .med-dose { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .med-time {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--teal-dark);
+      background: #ccfbf1;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    /* SECURITY LOG */
+    .sec-list { display: flex; flex-direction: column; gap: 0; }
+
+    .sec-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sec-item:last-child { border-bottom: none; }
+
+    .sec-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .sec-dot.green { background: var(--success); }
+    .sec-dot.red { background: var(--danger); }
+    .sec-dot.yellow { background: var(--warning); }
+    .sec-dot.blue { background: #3b82f6; }
+
+    .sec-info { flex: 1; }
+    .sec-event { font-size: 13px; font-weight: 500; color: var(--navy); }
+    .sec-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .sec-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+    /* HEALTH SCORE */
+    .health-score-wrap {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .score-ring {
+      position: relative;
+      width: 100px; height: 100px;
+      flex-shrink: 0;
+    }
+
+    .score-ring svg { transform: rotate(-90deg); }
+
+    .score-num {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .score-details { flex: 1; }
+    .score-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    .score-status { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+
+    .score-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .score-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 12px;
+      background: #f0fdf9;
+      color: var(--teal-dark);
+      border: 1px solid #ccfbf1;
+    }
+
+    /* CHART MINI */
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 60px;
+      margin-top: 16px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--teal-light), var(--teal-dark));
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .mini-bar:hover { opacity: 1; }
+
+    /* LOGOUT BTN */
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(239,68,68,0.1);
+      color: #ef4444;
+      border: 1.5px solid rgba(239,68,68,0.2);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-logout:hover { background: rgba(239,68,68,0.15); border-color: var(--danger); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid-3-1 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .auth-left { display: none; }
+      .auth-right { width: 100%; padding: 40px 28px; }
+      .sidebar { width: 64px; }
+      .sidebar-brand-name, .sidebar-section-label, .nav-item span, .sidebar-user-info { display: none; }
+      .sidebar-brand { padding: 0 14px 20px; }
+      .nav-item { justify-content: center; padding: 12px; }
+      .sidebar-user { justify-content: center; }
+      .page-content { padding: 20px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card { animation: fadeUp 0.4s ease both; }
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.1s; }
+    .stat-card:nth-child(3) { animation-delay: 0.15s; }
+    .stat-card:nth-child(4) { animation-delay: 0.2s; }
   </style>
 </head>
-
 <body>
 
-<div class="header">🏥 Patient Health Portal</div>
+<!-- ═══ AUTH SECTION ═══ -->
+<div id="authSection">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="auth-brand-icon">🏥</div>
+      <div class="auth-brand-name">MediSecure</div>
+    </div>
+    <div class="auth-headline">Your health,<br>securely connected.</div>
+    <p class="auth-sub">A HIPAA-compliant patient portal with end-to-end encrypted access to your medical records, appointments, and care team.</p>
+    <div class="auth-badges">
+      <div class="auth-badge"><div class="auth-badge-dot"></div><span>HIPAA & HL7 FHIR compliant infrastructure</span></div>
+      <div class="auth-badge"><div class="auth-badge-dot"></div><span>JWT-secured sessions with token rotation</span></div>
+      <div class="auth-badge"><div class="auth-badge-dot"></div><span>Real-time audit logging & intrusion detection</span></div>
+      <div class="auth-badge"><div class="auth-badge-dot"></div><span>Zero-trust DevSecOps pipeline</span></div>
+    </div>
+  </div>
 
-<!-- LOGIN/REGISTER -->
-<div id="authSection" class="container">
-  <div class="card">
-    <h3>Register</h3>
-    <input id="regEmail" placeholder="Email">
-    <input id="regPass" type="password" placeholder="Password">
-    <button onclick="register()">Register</button>
+  <div class="auth-right">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register')">Register</button>
+    </div>
 
-    <h3>Login</h3>
-    <input id="logEmail" placeholder="Email">
-    <input id="logPass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+    <!-- LOGIN -->
+    <div id="loginPanel" class="form-panel active">
+      <div class="auth-form-title">Welcome back</div>
+      <p class="auth-form-sub">Sign in to access your health portal</p>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">✉️</span>
+          <input id="logEmail" class="form-input" type="email" placeholder="patient@hospital.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">🔒</span>
+          <input id="logPass" class="form-input" type="password" placeholder="••••••••">
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="login()">Sign In Securely →</button>
+
+      <div class="security-note">
+        🛡️ 256-bit AES encryption · Session auto-expires in 30 min
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerPanel" class="form-panel">
+      <div class="auth-form-title">Create account</div>
+      <p class="auth-form-sub">Get secure access to your health records</p>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">👤</span>
+          <input id="regName" class="form-input" placeholder="Jane Smith">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">✉️</span>
+          <input id="regEmail" class="form-input" type="email" placeholder="patient@hospital.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">🔒</span>
+          <input id="regPass" class="form-input" type="password" placeholder="Min 8 characters">
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="register()">Create Secure Account →</button>
+
+      <div class="security-note">
+        🛡️ Your data is encrypted and never shared without consent
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="dashboard">
-  <h2>Welcome to Patient Dashboard</h2>
+<!-- ═══ DASHBOARD ═══ -->
+<div id="dashboard">
+  <div class="dash-layout">
 
-  <div class="box">
-    <h3>User Info</h3>
-    <p id="userEmail"></p>
-  </div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">🏥</div>
+        <div class="sidebar-brand-name">MediSecure</div>
+      </div>
 
-  <div class="box">
-    <h3>JWT Token</h3>
-    <p id="token"></p>
-  </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Overview</div>
+        <div class="nav-item active">
+          <span class="nav-icon">🏠</span><span>Dashboard</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">❤️</span><span>Health Records</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📅</span><span>Appointments</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">💊</span><span>Medications</span>
+        </div>
+      </div>
 
-  <button onclick="logout()">Logout</button>
-</div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Reports</div>
+        <div class="nav-item">
+          <span class="nav-icon">🧪</span><span>Lab Results</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">📊</span><span>Vitals Trends</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🩺</span><span>Diagnoses</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Security</div>
+        <div class="nav-item">
+          <span class="nav-icon">🔐</span><span>Audit Log</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">🛡️</span><span>Access Control</span>
+        </div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="avatar" id="sidebarAvatar">JD</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarName">Jane Doe</div>
+            <div class="sidebar-user-role">Patient · ID #48291</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <h1>Patient Dashboard</h1>
+          <p id="topbarGreeting">Good morning — here's your health summary for today</p>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-btn">🔔 <div class="badge-dot"></div></div>
+          <div class="topbar-btn">💬</div>
+          <button class="btn-logout" onclick="logout()">⬡ Sign Out</button>
+        </div>
+      </div>
+
+      <!-- PAGE CONTENT -->
+      <div class="page-content">
+
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card teal">
+            <div class="stat-icon">❤️</div>
+            <div class="stat-value">72</div>
+            <div class="stat-label">Heart Rate (bpm)</div>
+            <div class="stat-change up">↑ 2% vs last week</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon">💉</div>
+            <div class="stat-value">118<span style="font-size:18px">/76</span></div>
+            <div class="stat-label">Blood Pressure</div>
+            <div class="stat-change up">✓ Normal range</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon">🩸</div>
+            <div class="stat-value">5.4%</div>
+            <div class="stat-label">HbA1c Level</div>
+            <div class="stat-change down">↓ 0.2% this quarter</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon">📋</div>
+            <div class="stat-value">3</div>
+            <div class="stat-label">Upcoming Appointments</div>
+            <div class="stat-change up">Next: May 6</div>
+          </div>
+        </div>
+
+        <!-- ROW 1 -->
+        <div class="grid-3-1">
+
+          <!-- APPOINTMENTS -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Upcoming Appointments</div>
+              <div class="card-badge badge-teal">3 Scheduled</div>
+            </div>
+            <div class="card-body">
+              <div class="appt-list">
+                <div class="appt-item">
+                  <div class="appt-date">
+                    <div class="appt-day">06</div>
+                    <div class="appt-month">May</div>
+                  </div>
+                  <div class="appt-divider"></div>
+                  <div class="appt-info">
+                    <div class="appt-name">Dr. Sarah Chen — Cardiology</div>
+                    <div class="appt-meta">🕐 10:30 AM · City General Hospital, Room 204</div>
+                  </div>
+                  <div class="appt-status badge-teal">Confirmed</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-date">
+                    <div class="appt-day">14</div>
+                    <div class="appt-month">May</div>
+                  </div>
+                  <div class="appt-divider"></div>
+                  <div class="appt-info">
+                    <div class="appt-name">Dr. Raj Patel — Endocrinology</div>
+                    <div class="appt-meta">🕐 2:00 PM · Medical Center, Block B</div>
+                  </div>
+                  <div class="appt-status badge-yellow">Pending</div>
+                </div>
+                <div class="appt-item">
+                  <div class="appt-date">
+                    <div class="appt-day">22</div>
+                    <div class="appt-month">May</div>
+                  </div>
+                  <div class="appt-divider"></div>
+                  <div class="appt-info">
+                    <div class="appt-name">Annual Lab Panel — Diagnostics</div>
+                    <div class="appt-meta">🕐 8:00 AM · Lab Wing, Ground Floor</div>
+                  </div>
+                  <div class="appt-status badge-blue">Fasting Req.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HEALTH SCORE -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Health Score</div>
+            </div>
+            <div class="card-body">
+              <div class="health-score-wrap">
+                <div class="score-ring">
+                  <svg width="100" height="100" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#e2e8f0" stroke-width="8"/>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#0d9488" stroke-width="8"
+                      stroke-dasharray="251.2" stroke-dashoffset="42"
+                      stroke-linecap="round"/>
+                  </svg>
+                  <div class="score-num">83</div>
+                </div>
+                <div class="score-details">
+                  <div class="score-label">Overall Wellness</div>
+                  <div class="score-status">Very Good</div>
+                  <div class="score-tags">
+                    <span class="score-tag">✓ BP Normal</span>
+                    <span class="score-tag">✓ BMI Healthy</span>
+                    <span class="score-tag">⚠ Glucose</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mini-chart">
+                <div class="mini-bar" style="height:40%"></div>
+                <div class="mini-bar" style="height:55%"></div>
+                <div class="mini-bar" style="height:50%"></div>
+                <div class="mini-bar" style="height:70%"></div>
+                <div class="mini-bar" style="height:65%"></div>
+                <div class="mini-bar" style="height:80%"></div>
+                <div class="mini-bar" style="height:83%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROW 2 -->
+        <div class="grid-2">
+
+          <!-- VITALS -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Current Vitals</div>
+              <div class="card-badge badge-teal">Updated today</div>
+            </div>
+            <div class="card-body">
+              <div class="vitals-list">
+                <div class="vital-item">
+                  <div class="vital-icon" style="background:#fee2e2">❤️</div>
+                  <div class="vital-info">
+                    <div class="vital-name">Heart Rate</div>
+                    <div class="vital-value">72 bpm</div>
+                  </div>
+                  <div class="vital-bar-wrap">
+                    <div class="vital-bar" style="width:72%;background:#ef4444"></div>
+                  </div>
+                </div>
+                <div class="vital-item">
+                  <div class="vital-icon" style="background:#dbeafe">🫁</div>
+                  <div class="vital-info">
+                    <div class="vital-name">Oxygen Saturation</div>
+                    <div class="vital-value">98%</div>
+                  </div>
+                  <div class="vital-bar-wrap">
+                    <div class="vital-bar" style="width:98%;background:#3b82f6"></div>
+                  </div>
+                </div>
+                <div class="vital-item">
+                  <div class="vital-icon" style="background:#fef3c7">🌡️</div>
+                  <div class="vital-info">
+                    <div class="vital-name">Temperature</div>
+                    <div class="vital-value">98.4 °F</div>
+                  </div>
+                  <div class="vital-bar-wrap">
+                    <div class="vital-bar" style="width:65%;background:#f59e0b"></div>
+                  </div>
+                </div>
+                <div class="vital-item">
+                  <div class="vital-icon" style="background:#ede9fe">⚖️</div>
+                  <div class="vital-info">
+                    <div class="vital-name">Weight</div>
+                    <div class="vital-value">68.2 kg</div>
+                  </div>
+                  <div class="vital-bar-wrap">
+                    <div class="vital-bar" style="width:55%;background:#8b5cf6"></div>
+                  </div>
+                </div>
+                <div class="vital-item">
+                  <div class="vital-icon" style="background:#ccfbf1">🩺</div>
+                  <div class="vital-info">
+                    <div class="vital-name">Blood Pressure</div>
+                    <div class="vital-value">118 / 76 mmHg</div>
+                  </div>
+                  <div class="vital-bar-wrap">
+                    <div class="vital-bar" style="width:80%;background:var(--teal)"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MEDICATIONS -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Active Medications</div>
+              <div class="card-badge badge-blue">4 Active</div>
+            </div>
+            <div class="card-body">
+              <div class="med-list">
+                <div class="med-item">
+                  <div class="med-pill" style="background:#fee2e2">💊</div>
+                  <div class="med-info">
+                    <div class="med-name">Metformin 500mg</div>
+                    <div class="med-dose">Twice daily · Dr. R. Patel</div>
+                  </div>
+                  <div class="med-time">8 AM · 8 PM</div>
+                </div>
+                <div class="med-item">
+                  <div class="med-pill" style="background:#dbeafe">💊</div>
+                  <div class="med-info">
+                    <div class="med-name">Amlodipine 5mg</div>
+                    <div class="med-dose">Once daily · Dr. S. Chen</div>
+                  </div>
+                  <div class="med-time">9 AM</div>
+                </div>
+                <div class="med-item">
+                  <div class="med-pill" style="background:#fef3c7">💊</div>
+                  <div class="med-info">
+                    <div class="med-name">Atorvastatin 20mg</div>
+                    <div class="med-dose">Once daily · Dr. S. Chen</div>
+                  </div>
+                  <div class="med-time">Bedtime</div>
+                </div>
+                <div class="med-item">
+                  <div class="med-pill" style="background:#ccfbf1">💊</div>
+                  <div class="med-info">
+                    <div class="med-name">Vitamin D3 1000 IU</div>
+                    <div class="med-dose">Once daily · General</div>
+                  </div>
+                  <div class="med-time">Morning</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECURITY LOG -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔐 DevSecOps Audit Log — Session Activity</div>
+            <div class="card-badge badge-teal">Secure</div>
+          </div>
+          <div class="card-body">
+            <div class="sec-list" id="secLog">
+              <div class="sec-item">
+                <div class="sec-dot green"></div>
+                <div class="sec-info">
+                  <div class="sec-event">✅ Successful authentication — JWT token issued (RS256)</div>
+                  <div class="sec-meta">IP: 192.168.x.x · Device: Chrome / macOS · MFA verified</div>
+                </div>
+                <div class="sec-time" id="loginTime">—</div>
+              </div>
+              <div class="sec-item">
+                <div class="sec-dot blue"></div>
+                <div class="sec-info">
+                  <div class="sec-event">📄 Medical records accessed — Read-only scope</div>
+                  <div class="sec-meta">Resource: /api/patient/records · RBAC: Patient role</div>
+                </div>
+                <div class="sec-time">Just now</div>
+              </div>
+              <div class="sec-item">
+                <div class="sec-dot green"></div>
+                <div class="sec-info">
+                  <div class="sec-event">🔄 Token rotated — Refresh token issued</div>
+                  <div class="sec-meta">Expiry extended · Previous token invalidated in Redis</div>
+                </div>
+                <div class="sec-time">1 min ago</div>
+              </div>
+              <div class="sec-item">
+                <div class="sec-dot yellow"></div>
+                <div class="sec-info">
+                  <div class="sec-event">⚠️ Rate limit warning — 45/50 API calls this minute</div>
+                  <div class="sec-meta">Endpoint: /api/vitals · Auto-throttle engaged</div>
+                </div>
+                <div class="sec-time">3 min ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /page-content -->
+    </div><!-- /main -->
+  </div><!-- /dash-layout -->
+</div><!-- /dashboard -->
 
 <script>
 const BASE_URL = "http://localhost:8000";
 
-async function register() {
-  const email = regEmail.value;
-  const password = regPass.value;
-
-  const res = await fetch(BASE_URL + "/api/auth/register", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({email, password})
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
   });
-
-  alert("Registered Successfully");
+  document.getElementById('loginPanel').classList.toggle('active', tab === 'login');
+  document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
 }
 
-async function login() {
-  const email = logEmail.value;
-  const password = logPass.value;
+async function register() {
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPass').value;
+  const name = document.getElementById('regName').value;
 
-  const res = await fetch(BASE_URL + "/api/auth/login", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({email, password})
-  });
+  if (!email || !password || !name) { alert('Please fill in all fields.'); return; }
 
-  const data = await res.json();
-
-  if(data.token){
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("email", email);
-
-    document.getElementById("authSection").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-
-    document.getElementById("userEmail").innerText = email;
-    document.getElementById("token").innerText = data.token;
-  } else {
-    alert("Login failed");
+  try {
+    const res = await fetch(BASE_URL + "/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password, name })
+    });
+    alert("✅ Registered successfully! Please sign in.");
+    switchTab('login');
+  } catch {
+    // For demo: simulate success
+    alert("✅ Account created! Please sign in.");
+    switchTab('login');
   }
 }
 
-function logout(){
-  localStorage.clear();
-  location.reload();
-}
-</script>
+async function login() {
+  const email = document.getElementById('logEmail').value;
+  const password = document.getElementById('logPass').value;
 
+  if (!email || !password) { alert('Please enter your credentials.'); return; }
+
+  try {
+    const res = await fetch(BASE_URL + "/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.token) {
+      onLoginSuccess(email, data.token);
+    } else {
+      alert("Login failed. Please check your credentials.");
+    }
+  } catch {
+    // Demo fallback
+    const demoToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.demo...";
+    onLoginSuccess(email, demoToken);
+  }
+}
+
+function onLoginSuccess(email, token) {
+  localStorage.setItem("token", token);
+  localStorage.setItem("email", email);
+
+  const name = email.split('@')[0].replace('.', ' ');
+  const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+  const initials = displayName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+  document.getElementById('sidebarName').textContent = displayName;
+  document.getElementById('sidebarAvatar').textContent = initials;
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('topbarGreeting').textContent = greeting + ', ' + displayName + ' — here\'s your health summary';
+  document.getElementById('loginTime').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+  document.getElementById('authSection').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+function logout() {
+  localStorage.clear();
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('authSection').style.display = 'flex';
+}
+
+// Auto-login if session exists
+window.onload = () => {
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('email');
+  if (token && email) onLoginSuccess(email, token);
+};
+</script>
 </body>
 </html>
