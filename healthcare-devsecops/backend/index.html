@@ -1,24 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Healthcare DevSecOps</title>
+  <title>Patient Health Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #e6f0ff, #ffffff);
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background: #007bff;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 50px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+      text-align: center;
+      color: #007bff;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .output {
+      margin: 40px auto;
+      width: 60%;
+      background: black;
+      color: #00ffcc;
+      padding: 15px;
+      border-radius: 10px;
+      font-family: monospace;
+    }
+  </style>
 </head>
+
 <body>
 
-  <h2>Healthcare DevSecOps Demo</h2>
+  <div class="header">🏥 Patient Health Portal (Secure DevSecOps)</div>
 
-  <h3>Register</h3>
-  <input id="regEmail" placeholder="Email"><br><br>
-  <input id="regPass" placeholder="Password" type="password"><br><br>
-  <button onclick="register()">Register</button>
+  <div class="container">
 
-  <h3>Login</h3>
-  <input id="logEmail" placeholder="Email"><br><br>
-  <input id="logPass" placeholder="Password" type="password"><br><br>
-  <button onclick="login()">Login</button>
+    <!-- Register -->
+    <div class="card">
+      <h3>Patient Registration</h3>
+      <input id="regEmail" placeholder="Enter Email">
+      <input id="regPass" type="password" placeholder="Enter Password">
+      <button onclick="register()">Register</button>
+    </div>
 
-  <h3>Output</h3>
-  <pre id="output"></pre>
+    <!-- Login -->
+    <div class="card">
+      <h3>Patient Login</h3>
+      <input id="logEmail" placeholder="Enter Email">
+      <input id="logPass" type="password" placeholder="Enter Password">
+      <button onclick="login()">Login</button>
+    </div>
+
+  </div>
+
+  <div class="output" id="output">Output will appear here...</div>
 
 <script>
 const BASE_URL = "http://localhost:8000";
