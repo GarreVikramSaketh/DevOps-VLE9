@@ -4,10 +4,9 @@
   <title>Patient Health Portal</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #e6f0ff, #ffffff);
+      font-family: Arial;
       margin: 0;
-      padding: 0;
+      background: #f4f8fb;
     }
 
     .header {
@@ -16,13 +15,11 @@
       padding: 15px;
       text-align: center;
       font-size: 22px;
-      font-weight: bold;
     }
 
     .container {
       display: flex;
       justify-content: center;
-      gap: 40px;
       margin-top: 50px;
     }
 
@@ -30,21 +27,14 @@
       background: white;
       padding: 20px;
       width: 300px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-
-    h3 {
-      text-align: center;
-      color: #007bff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px gray;
     }
 
     input {
       width: 100%;
       padding: 10px;
       margin: 8px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
     }
 
     button {
@@ -53,82 +43,105 @@
       background: #007bff;
       color: white;
       border: none;
-      border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
     }
 
-    button:hover {
-      background: #0056b3;
+    .dashboard {
+      display: none;
+      padding: 20px;
     }
 
-    .output {
-      margin: 40px auto;
-      width: 60%;
-      background: black;
-      color: #00ffcc;
-      padding: 15px;
+    .box {
+      background: white;
+      padding: 20px;
+      margin: 20px;
       border-radius: 10px;
-      font-family: monospace;
+      box-shadow: 0 0 10px gray;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="header">🏥 Patient Health Portal (Secure DevSecOps)</div>
+<div class="header">🏥 Patient Health Portal</div>
 
-  <div class="container">
+<!-- LOGIN/REGISTER -->
+<div id="authSection" class="container">
+  <div class="card">
+    <h3>Register</h3>
+    <input id="regEmail" placeholder="Email">
+    <input id="regPass" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
 
-    <!-- Register -->
-    <div class="card">
-      <h3>Patient Registration</h3>
-      <input id="regEmail" placeholder="Enter Email">
-      <input id="regPass" type="password" placeholder="Enter Password">
-      <button onclick="register()">Register</button>
-    </div>
+    <h3>Login</h3>
+    <input id="logEmail" placeholder="Email">
+    <input id="logPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+</div>
 
-    <!-- Login -->
-    <div class="card">
-      <h3>Patient Login</h3>
-      <input id="logEmail" placeholder="Enter Email">
-      <input id="logPass" type="password" placeholder="Enter Password">
-      <button onclick="login()">Login</button>
-    </div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="dashboard">
+  <h2>Welcome to Patient Dashboard</h2>
 
+  <div class="box">
+    <h3>User Info</h3>
+    <p id="userEmail"></p>
   </div>
 
-  <div class="output" id="output">Output will appear here...</div>
+  <div class="box">
+    <h3>JWT Token</h3>
+    <p id="token"></p>
+  </div>
+
+  <button onclick="logout()">Logout</button>
+</div>
 
 <script>
 const BASE_URL = "http://localhost:8000";
 
 async function register() {
-  const email = document.getElementById("regEmail").value;
-  const password = document.getElementById("regPass").value;
+  const email = regEmail.value;
+  const password = regPass.value;
 
   const res = await fetch(BASE_URL + "/api/auth/register", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({email, password})
   });
 
-  const data = await res.json();
-  document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+  alert("Registered Successfully");
 }
 
 async function login() {
-  const email = document.getElementById("logEmail").value;
-  const password = document.getElementById("logPass").value;
+  const email = logEmail.value;
+  const password = logPass.value;
 
   const res = await fetch(BASE_URL + "/api/auth/login", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({email, password})
   });
 
   const data = await res.json();
-  document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+
+  if(data.token){
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("email", email);
+
+    document.getElementById("authSection").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+
+    document.getElementById("userEmail").innerText = email;
+    document.getElementById("token").innerText = data.token;
+  } else {
+    alert("Login failed");
+  }
+}
+
+function logout(){
+  localStorage.clear();
+  location.reload();
 }
 </script>
 
